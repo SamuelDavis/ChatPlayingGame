@@ -25,8 +25,6 @@ defmodule Cpg.Bot do
 
       build_response(new_state, message.user) |> send_message(message.channel, slack)
 
-      IO.inspect(state)
-
       {:ok, new_state}
     end
   end
