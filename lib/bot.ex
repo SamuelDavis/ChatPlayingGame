@@ -1,19 +1,19 @@
 defmodule Cpg.Bot do
   @moduledoc false
-	use Slack
+  use Slack
   @state %{
     actions: []
   }
 
   def start_link(token),
-    do: Slack.Bot.start_link(__MODULE__, @state, token, %{name: __MODULE__})
+  do: Slack.Bot.start_link(__MODULE__, @state, token, %{name: __MODULE__})
 
   def handle_connect(slack, state) do
-		IO.puts "Connected as #{slack.me.name}"
-		{:ok, state}
-	end
+    IO.puts "Connected as #{slack.me.name}"
+    {:ok, state}
+  end
 
-	def handle_event(message = %{type: "message"}, slack, state) do
+  def handle_event(message = %{type: "message"}, slack, state) do
     [target | text] = message |> Map.get(:text, "") |> String.split(" ")
     if target != "<@#{slack.me.id}>" do
       {:ok, state}
@@ -29,8 +29,8 @@ defmodule Cpg.Bot do
 
       {:ok, new_state}
     end
-	end
-	def handle_event(_, _, state), do: {:ok, state}
+  end
+  def handle_event(_, _, state), do: {:ok, state}
 
   def build_response(%{actions: actions}, user) do
     actions
@@ -39,12 +39,12 @@ defmodule Cpg.Bot do
     |> Cpg.Fsm.respond_to
   end
 
-	def handle_info({:message, text, channel}, slack, state) do
-		IO.puts "Sending your message, captain!"
+  def handle_info({:message, text, channel}, slack, state) do
+    IO.puts "Sending your message, captain!"
 
-		send_message(text, channel, slack)
+    send_message(text, channel, slack)
 
-		{:ok, state}
-	end
-	def handle_info(_, _, state), do: {:ok, state}	
+    {:ok, state}
+  end
+  def handle_info(_, _, state), do: {:ok, state}	
 end
